@@ -102,7 +102,6 @@ def discovery_ctxsdwan_vpath(section: List[SDWANVPath]) -> InventoryResult:
 
 # eval service state
 def check_ctxsdwan_vpath(item, params: Mapping[str, int], section: List[SDWANVPath]) -> CheckResult:
-    found = False
     for path in section:
         if item == path.name and path.idx == params["discovery_idx"]:
             if path.state not in ctx_sdwan_vpath_states:
@@ -117,12 +116,10 @@ def check_ctxsdwan_vpath(item, params: Mapping[str, int], section: List[SDWANVPa
             for name, opts in path.path_data.items():
                 if opts[2]:
                     replaced_name = name.replace('->', '_').replace('<-', '_')
-                    yield Metric(name, get_rate(value_store, f"sdwan.vpath.{path.idx}.{replaced_name}", this_time, opts[0] * opts[1]))
+                    yield Metric(name, get_rate(value_store, f"SD-WAN-VPath.{path.idx}.{replaced_name}", this_time, opts[0] * opts[1]))
                 else:
                     yield Metric(name, opts[0] * opts[1])
-
-    if not found:
-        yield Result(state=State.UNKNOWN, summary=f"index '{params['discovery_idx']}' not found in SNMP table")
+            break
 
 
 register.check_plugin(

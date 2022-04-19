@@ -88,10 +88,8 @@ def discovery_ctxsdwan_link(section: List[SDWANLink]) -> InventoryResult:
 
 # eval service state
 def check_ctxsdwan_link(item, params: Mapping[str, int], section: List[SDWANLink]) -> CheckResult:
-    found = False
     for link in section:
         if link.name == item and link.idx == params["discovery_idx"]:
-            found = True
             if link.state not in ctx_sdwan_link_states:
                 yield Result(state=State.UNKNOWN, summary=f"Link state '{link.state}' is unknown")
                 break
@@ -103,9 +101,6 @@ def check_ctxsdwan_link(item, params: Mapping[str, int], section: List[SDWANLink
             for name, value in link.traffic_data.items():
                 yield Metric(name, get_rate(value_store, f"SD-WAN-Link.{link.idx}.{name}", this_time, value))
             break
-
-    if not found:
-        yield Result(state=State.UNKNOWN, summary=f"index '{params['discovery_idx']}' not found in SNMP table")
 
 
 register.check_plugin(
