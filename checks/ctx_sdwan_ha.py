@@ -76,7 +76,7 @@ def check_ctxsdwan_ha(item, params: Mapping[str, Any], section: int) -> CheckRes
 
 register.check_plugin(
     name="ctx_sdwan_ha",
-    service_name="SDW %s",
+    service_name="SD-WAN %s",
     discovery_function=discovery_ctxsdwan_ha,
     check_function=check_ctxsdwan_ha,
     check_default_parameters={"discovery_value": 0}
