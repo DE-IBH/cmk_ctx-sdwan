@@ -27,7 +27,7 @@
 
 import time
 from typing import List, Mapping, NamedTuple
-from .agent_based_api.v1 import register, Result, Service, SNMPTree, State, Metric, equals, get_rate, get_value_store
+from .agent_based_api.v1 import register, Result, Service, SNMPTree, State, Metric, startswith, get_rate, get_value_store
 from .agent_based_api.v1.type_defs import CheckResult, StringTable, InventoryResult
 
 ctx_sdwan_path_states = {
@@ -79,7 +79,7 @@ register.snmp_section(
             oids=['2', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14']
         )
     ],
-    detect=equals(".1.3.6.1.2.1.1.2.0", ".1.3.6.1.4.1.3845.31.4")
+    detect=startswith(".1.3.6.1.2.1.1.2.0", ".1.3.6.1.4.1.3845.31")
 )
 
 

@@ -26,7 +26,7 @@
 #
 
 from typing import List, Any, Mapping
-from .agent_based_api.v1 import register, Result, Service, SNMPTree, State, Metric, equals
+from .agent_based_api.v1 import register, Result, Service, SNMPTree, State, Metric, startswith
 from .agent_based_api.v1.type_defs import CheckResult, StringTable, InventoryResult
 
 
@@ -54,7 +54,7 @@ register.snmp_section(
             oids=['9']
         )
     ],
-    detect=equals(".1.3.6.1.2.1.1.2.0", ".1.3.6.1.4.1.3845.31.4")
+    detect=startswith(".1.3.6.1.2.1.1.2.0", ".1.3.6.1.4.1.3845.31")
 )
 
 
