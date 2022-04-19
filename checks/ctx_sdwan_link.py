@@ -93,7 +93,7 @@ def check_ctxsdwan_link(item, params: Mapping[str, int], section: List[SDWANLink
         if link.name == item and link.idx == params["discovery_idx"]:
             found = True
             if link.state not in ctx_sdwan_link_states:
-                yield Result(State.UNKNOWN, summary=f"Link state '{link.state}' is unknown")
+                yield Result(state=State.UNKNOWN, summary=f"Link state '{link.state}' is unknown")
                 break
 
             yield Result(state=ctx_sdwan_link_states[link.state][0], summary=f"Link state is {ctx_sdwan_link_states[link.state][1]} ({link.state})")
@@ -105,7 +105,7 @@ def check_ctxsdwan_link(item, params: Mapping[str, int], section: List[SDWANLink
             break
 
     if not found:
-        yield Result(State.UNKNOWN, summary=f"index '{params['discovery_idx']}' not found in SNMP table")
+        yield Result(state=State.UNKNOWN, summary=f"index '{params['discovery_idx']}' not found in SNMP table")
 
 
 register.check_plugin(
