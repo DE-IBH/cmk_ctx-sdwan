@@ -1,0 +1,11 @@
+title: Citrix SD-WAN
+agents: snmp
+catalog: hw/network/citrix
+author: Thomas Liske <liske@ibh.de>
+license: GPL
+distribution: check_mk
+description:
+ This check monitors the WAN Path status of Citrix SD-WAN appliances.
+
+inventory:
+ Checks for paths and virtual paths are created.

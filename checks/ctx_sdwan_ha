@@ -1,0 +1,70 @@
+#!/usr/bin/python
+# -*- encoding: utf-8; py-indent-offset: 4 -*-
+
+# cmk_ctx-sdwan - check-mk plugin for SNMP-based Cisco Digital-Optical-Monitoring monitoring
+#
+# Authors:
+#   Thomas Liske <liske@ibh.de>
+#
+# Copyright Holder:
+#   2019 (C) IBH IT-Service GmbH [http://www.ibh.de/]
+#
+# License:
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this package; if not, write to the Free Software
+#   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+#
+
+ctx_sdwan_ha_states = {
+	"0": 'undefined',
+	"1": 'notConfigured',
+	"2": 'active',
+	"3": 'standby',
+}
+
+
+# generate list of valid monitors
+def inventory_ctxsdwan_ha(check, info):
+	inventory = []
+
+
+	for ha in info[0]:
+		if ha[0] > 1:
+			inventory.append(( None, [ ha[0] ] ))
+
+	return inventory
+
+# eval service state
+def check_ctxsdwan_ha(item, params, info):
+	hstate = info[0][0][0]
+	cstate = 0
+	if hstate != params[0]:
+	    cstate = 2
+	    if hstate > 1:
+		cstate = 1
+
+	return (cstate, "HA state is {}({})".format(ctx_sdwan_ha_states[hstate], hstate), [['ha state', hstate]])
+
+
+# check registry
+check_info["ctx_sdwan_ha"] = {
+	'check_function':          check_ctxsdwan_ha,
+	'inventory_function':      inventory_ctxsdwan_ha,
+	'service_description':     'SDW HA State',
+	'snmp_info':               [
+	# CITRIX-SD-WAN-MIB::sdWANStatsApplianceHAState
+		('.1.3.6.1.4.1.3845.31.4.2.2.12.1', ["9"]),
+	],
+	'snmp_scan_function':      lambda oid: oid(".1.3.6.1.2.1.1.2.0") == ".1.3.6.1.4.1.3845.31.4",
+	'has_perfdata':            True,
+}
